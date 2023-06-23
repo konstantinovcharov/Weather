@@ -1,17 +1,40 @@
 import "./weather.css";
 
-export default function Weather ({cityname, weatherIcon, temp_celsius, temp_max, temp_min, description}){
+export default function Weather ({cityname, weatherIcon, temp_celsius, temp_max, temp_min, description, isFahrenheit}){
   const maxminTemp = (min, max) => {
     if (max && min) {
       return (
         <h3>
-          <span className="px-4">{min}&deg;</span>
-          <span className="px-4">{max}&deg;</span>
+          <span className="px-4 temperature">{min}&deg;</span>
+          <span className="px-4 temperature">{max}&deg;</span>
         </h3>
       );
     }
     return null;
   };
+
+ 
+
+  function convertTemp() {
+    const temperatureElements = document.querySelectorAll('.temperature');
+    const convertButton = document.querySelector('.convertBtn')
+
+    temperatureElements.forEach(temperature => {
+        const temperatureValue = parseFloat(temperature.textContent);
+
+        if (isFahrenheit) {
+            const celsiusValue = (temperatureValue - 32) * (5 / 9);
+            temperature.textContent = celsiusValue.toFixed(0)+ '°';
+            convertButton.textContent = 'Convert to Fahrenheit';
+        } else {
+            const fahrenheitValue = temperatureValue * (9 / 5) + 32;
+            temperature.textContent = fahrenheitValue.toFixed(0) + '°';
+            convertButton.textContent = 'Convert to Celsius';
+        }
+    });
+
+    isFahrenheit = !isFahrenheit;
+}
 
   return (
     <div className="container text-light">
@@ -23,7 +46,7 @@ export default function Weather ({cityname, weatherIcon, temp_celsius, temp_max,
         </h5>
 
         {/* Get Celsius */}
-        {temp_celsius && <h1 className="py-2">{temp_celsius}&deg;</h1>}
+        {temp_celsius && <h1 className="py-2 temperature">{temp_celsius}&deg;</h1>}
 
         {/* show max and min temp */}
         {maxminTemp(temp_min, temp_max)}
@@ -33,6 +56,8 @@ export default function Weather ({cityname, weatherIcon, temp_celsius, temp_max,
           {description.charAt(0).toUpperCase() + description.slice(1)}
         </h4>
       </div>
+
+      {cityname && <button className="convertBtn" onClick={convertTemp}>Convert to Fahrenheit</button>}
     </div>
   );
 };

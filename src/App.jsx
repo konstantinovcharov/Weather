@@ -8,6 +8,7 @@ import "weather-icons/css/weather-icons.css";
 
 const Api_Key = "214d6c547f73c737ca58bf19a465d50f";
 
+
 const App = () => {
   const [weather, setWeather] = useState({
     city: undefined,
@@ -30,6 +31,8 @@ const App = () => {
     Clear: "wi-day-sunny",
     Clouds: "wi-day-fog"
   };
+
+  const [isFahrenheit, setIsFahrenheit] = useState(false)
 
   const get_WeatherIcon = (rangeId) => {
     switch (true) {
@@ -91,6 +94,8 @@ const App = () => {
       }));
     }
 
+    setIsFahrenheit(false)
+
   };
   
 
@@ -103,7 +108,8 @@ const App = () => {
         temp_celsius={weather.celsius}
         temp_max={weather.temp_max}
         temp_min={weather.temp_min}
-        description={weather.description}        
+        description={weather.description}
+        isFahrenheit={isFahrenheit}        
       />      
     </div>
   );
