@@ -74,8 +74,8 @@ const App = () => {
   
       const response = await api_call.json();
   
-      setWeather((prevState) => ({
-        ...prevState,
+      setWeather({
+        
         city: `${response.name}, ${response.sys.country}`,
         country: response.sys.country,
         main: response.weather[0].main,
@@ -84,7 +84,7 @@ const App = () => {
         temp_min: calCelsius(response.main.temp_min),
         description: response.weather[0].description,
         icon: get_WeatherIcon(response.weather[0].id)
-      }));           
+      });           
   
       console.log(response);
     } else {
