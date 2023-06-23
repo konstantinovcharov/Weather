@@ -18,7 +18,8 @@ export default function Weather ({cityname, weatherIcon, temp_celsius, temp_max,
       <div className="Card">
         <h1 className="text-white py-3">{cityname}</h1>
         <h5 className="py-4">
-          <i className={`wi ${weatherIcon} display-1`} />
+          <i className={`wi ${weatherIcon}`} />
+          
         </h5>
 
         {/* Get Celsius */}

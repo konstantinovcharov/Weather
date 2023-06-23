@@ -5,6 +5,7 @@ import Weather from "./components/weather";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "weather-icons/css/weather-icons.css";
 
+
 const Api_Key = "214d6c547f73c737ca58bf19a465d50f";
 
 const App = () => {
@@ -20,7 +21,7 @@ const App = () => {
     error: false
   });
 
-  const [weatherIcon, setWeatherIcon] = useState({
+  const weatherIcon= {
     Thunderstorm: "wi-thunderstorm",
     Drizzle: "wi-sleet",
     Rain: "wi-storm-showers",
@@ -28,28 +29,29 @@ const App = () => {
     Atmosphere: "wi-fog",
     Clear: "wi-day-sunny",
     Clouds: "wi-day-fog"
-  });
+  };
 
-  const getWeatherIcon = (icons, rangeId) => {
+  const get_WeatherIcon = (rangeId) => {
     switch (true) {
       case rangeId >= 200 && rangeId < 232:
-        return icons.Thunderstorm;
+        return weatherIcon.Thunderstorm;
       case rangeId >= 300 && rangeId <= 321:
-        return icons.Drizzle;
+        return weatherIcon.Drizzle;
       case rangeId >= 500 && rangeId <= 521:
-        return icons.Rain;
+        return weatherIcon.Rain;
       case rangeId >= 600 && rangeId <= 622:
-        return icons.Snow;
+        return weatherIcon.Snow;
       case rangeId >= 701 && rangeId <= 781:
-        return icons.Atmosphere;
+        return weatherIcon.Atmosphere;
       case rangeId === 800:
-        return icons.Clear;
+        return weatherIcon.Clear;
       case rangeId >= 801 && rangeId <= 804:
-        return icons.Clouds;
+        return weatherIcon.Clouds;
       default:
-        return icons.Clouds;
+        return weatherIcon.Clouds;
     }
   };
+  
 
   const calCelsius = (temp) => {
     let cell = Math.floor(temp - 273.15);
@@ -58,18 +60,19 @@ const App = () => {
 
   const getWeather = async (e) => {
     e.preventDefault();
-
+  
     const country = e.target.elements.country.value;
     const city = e.target.elements.city.value;
-
+  
     if (country && city) {
       const api_call = await fetch(
         `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${Api_Key}`
       );
-
+  
       const response = await api_call.json();
-
-      setWeather({
+  
+      setWeather((prevState) => ({
+        ...prevState,
         city: `${response.name}, ${response.sys.country}`,
         country: response.sys.country,
         main: response.weather[0].main,
@@ -77,22 +80,19 @@ const App = () => {
         temp_max: calCelsius(response.main.temp_max),
         temp_min: calCelsius(response.main.temp_min),
         description: response.weather[0].description,
-        error: false
-      });
-
-      setWeatherIcon(prevState => ({
-        ...prevState,
-        icon: getWeatherIcon(weatherIcon, response.weather[0].id)
-      }));
-
+        icon: get_WeatherIcon(response.weather[0].id)
+      }));           
+  
       console.log(response);
     } else {
-      setWeather(prevState => ({
+      setWeather((prevState) => ({
         ...prevState,
-        error: true
+        error: true,
       }));
     }
+
   };
+  
 
   return (
     <div className="App">
@@ -103,9 +103,8 @@ const App = () => {
         temp_celsius={weather.celsius}
         temp_max={weather.temp_max}
         temp_min={weather.temp_min}
-        description={weather.description}
-        
-      />
+        description={weather.description}        
+      />      
     </div>
   );
 };
