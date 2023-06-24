@@ -12,3 +12,17 @@
     border: none;
     border-bottom: 2px solid tomato;
   }
+
+  .convertBtn {
+    background-color: #efeded;
+    color: #000000;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .convertBtn:hover {
+    background-color: #909399;
+  }

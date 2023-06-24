@@ -46,7 +46,7 @@ const Weather = ({
                         {description.charAt(0).toUpperCase() + description.slice(1)}
                     </h4>
                     
-                    <button onClick={toggleTemperature}>
+                    <button onClick={toggleTemperature} className="convertBtn">
                         Switch to {isFahrenheit ? "Celsius" : "Fahrenheit"}
                     </button>
                 </>

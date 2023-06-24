@@ -5,7 +5,6 @@ import Weather from "./components/weather";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "weather-icons/css/weather-icons.css";
 
-
 const Api_Key = "214d6c547f73c737ca58bf19a465d50f";
 
 
@@ -22,7 +21,7 @@ const App = () => {
     error: false
   });
 
-  const weatherIcon= {
+  const weatherIcon = {
     Thunderstorm: "wi-thunderstorm",
     Drizzle: "wi-sleet",
     Rain: "wi-storm-showers",
@@ -32,7 +31,8 @@ const App = () => {
     Clouds: "wi-day-fog"
   };
 
-  const [isFahrenheit, setIsFahrenheit] = useState(false)
+  const [backgroundImage, setBackgroundImage] = useState(null)
+
 
   const get_WeatherIcon = (rangeId) => {
     switch (true) {
@@ -54,28 +54,42 @@ const App = () => {
         return weatherIcon.Clouds;
     }
   };
-  
+
 
   const calCelsius = (temp) => {
     let cell = Math.floor(temp - 273.15);
     return cell;
   };
 
+  const getBackgroundImage = (weatherCondition) => {
+    const backgroundImages = {
+      Blizzard: "blizzard.min.jpg",
+      Clear: "Clear.jpg",
+      Clouds: "cloudy-min.jpg",
+      Drizzle: "Drizzle-min.jpg",
+      Fog: "foggy-min.jpg",
+      Rain: "Rain-min.jpg",
+      ModerateRain: "Rain-min.jpg",
+      Thunderstorm: "Thunderstorm-min.jpg"
+    }
+  
+    return backgroundImages[weatherCondition];
+  };
+
   const getWeather = async (e) => {
     e.preventDefault();
-  
+
     const country = e.target.elements.country.value;
     const city = e.target.elements.city.value;
-  
+
     if (country && city) {
       const api_call = await fetch(
         `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${Api_Key}`
       );
-  
+
       const response = await api_call.json();
-  
+
       setWeather({
-        
         city: `${response.name}, ${response.sys.country}`,
         country: response.sys.country,
         main: response.weather[0].main,
@@ -84,8 +98,12 @@ const App = () => {
         temp_min: calCelsius(response.main.temp_min),
         description: response.weather[0].description,
         icon: get_WeatherIcon(response.weather[0].id)
-      });           
-  
+      });
+
+      setBackgroundImage(getBackgroundImage(response.weather[0].main));      
+      document.body.style.backgroundImage = `url(${getBackgroundImage(response.weather[0].main)})`;     
+      
+
       console.log(response);
     } else {
       setWeather((prevState) => ({
@@ -94,10 +112,8 @@ const App = () => {
       }));
     }
 
-    setIsFahrenheit(false)
-
   };
-  
+
 
   return (
     <div className="App">
@@ -109,8 +125,7 @@ const App = () => {
         temp_max={weather.temp_max}
         temp_min={weather.temp_min}
         description={weather.description}
-        isFahrenheit={isFahrenheit}        
-      />      
+      />
     </div>
   );
 };
